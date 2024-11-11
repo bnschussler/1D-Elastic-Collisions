@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" href="style.css">
+      <style>
+         .column > p{
+         margin-top: 30px;
+         }
+         .small{
+         width: 3ch;
+         }
+      </style>
+   </head>
+   <body>
+      <h1>1D Elastic Collision Simulation</h1>
+      <div class="column interactive pad">
+         <div class="row">
+            <canvas id="sketch" width="1024" height="128"></canvas>
+         </div>
+         <div class="row">
+            <p style="margin-bottom: 0px;">Presets:</p>
+            <div class="row" style="height:100px">
+               <div class="column">
+                  <button style="height:80%;width:90%" id="Preset 1">Multiplication (6x7)</button>
+               </div>
+               <div class="column">
+                  <button style="height:80%;width:90%" id="Preset 2">Pi Calculator</button>
+               </div>
+               <div class="column">
+                  <button style="height:80%;width:90%" id="Preset 3">Stacked Super Bounce</button>
+               </div>
+            </div>
+            <hr style="width:100%">
+            <hr style="width:100%">
+            <button onclick="if(this.textContent=='Run' && settingschanged){getKeyFrames()}
+                             if(this.textContent=='Restart'){t=ZERO;}
+                             run=(this.textContent=='Run');this.textContent=(this.textContent=='Run')?'Restart':'Run';
+                             document.getElementById('pausebutton').disabled=(this.textContent=='Run');
+                              if(this.textContent=='Run')document.getElementById('pausebutton').textContent='Pause';" id="runbutton" class="bluebutton">Run</button>
+            <button onclick="run=(this.textContent=='Unpause');
+                             this.textContent=(this.textContent=='Pause')?'Unpause':'Pause'" id="pausebutton" disabled>Pause</button>
+
+            <p style="margin-bottom: 0px;">Positions (<b>ascending order</b>, separated by spaces):</p>
+            <input type="text" id="ptext" value="-1 3 5" class="break small" oninput="settingschanged=true"/>
+            <p style="margin-bottom: 0px;">Velocities (separated by spaces):</p>
+            <input type="text" id="vtext" value="1 1 -1" class="break small" oninput="settingschanged=true"/>
+            <p style="margin-bottom: 0px;">Masses (separated by spaces):</p>
+            <input type="text" id="mtext" value="1 1 1" class="break small" oninput="settingschanged=true"/>
+
+            <div class="row">
+               <div class="column">
+                  <p> min x: 
+                  <input type="text" style="width: 8ch" value="-24" oninput="xmin=this.value">
+                  </p>
+               </div>
+               <div class="column">
+                  <p> max x:
+                  <input type="text" style="width: 8ch" value="24" oninput="xmax=this.value">
+                  </p>
+               </div>
+            </div>
+
+         </div>
+         <!--<div id="advanced" class="row pad" style="border-top: 1px solid #808080;">
+            <div class="dropdown row">
+               <label for="showAdvanced" class="toggle" style="width:100%;margin-bottom: 10px;">
+                  <p>Advanced
+                  <input id="showAdvanced" type="checkbox"/></p>
+               </label>
+               <div class="options row">
+                  <p style="margin-bottom: 0px;">Box Widths (separated by spaces):</p>
+                  <input type="text" id="wtext" value="1 1 1" class="break small" />
+               </div>
+            </div>
+         </div>-->
+      </div>
+      <script src="simulation.js"></script>
+      <script src="guiHandling.js"></script>
+      <script>
+         start();
+         setInterval(function(){
+           draw();
+         }, 30);
+      </script>
+   </body>
+</html>
+
