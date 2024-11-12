@@ -24,6 +24,7 @@ var frames=[];
 var t;
 var run=false;
 var settingschanged=false;
+var showtotal=false;
 
 var framerate=20;
 
@@ -93,6 +94,9 @@ class BigFrac {
     if(fst==Infinity){
       return new BigFrac(1,0);
     }
+    if(fst==-Infinity){
+      return new BigFrac(-1,0);
+    }
     let d=String(fst).indexOf('.')
     d=(d==-1)?0:(String(fst).length-1-d);
     return BigFrac.reduced(new BigFrac(String(fst).replace('.',''),'1'+'0'.repeat(d)));
@@ -140,8 +144,6 @@ function getKeyFrames(){
     //bwrad[i]=BigFrac.toBig(fbwrad[i]);
   }
 
-  console.log(pos);
-
   let collisioncount=0;
   frames=[];
   frames[0]=[t,collisioncount,[...pos],[...vel]]
@@ -155,24 +157,9 @@ function getKeyFrames(){
     pad[i]=ONE//BigFrac.add(bwrad[i],bwrad[i+1]);
 
     //some cases for infinite masses
-    if(mass[i].den==0 && mass[i+1].den!=0){
-      rmasses[i]=[TWO,
-                  ONE,
-                  ZERO];
-
-    }
-    else if(mass[i].den!=0 && mass[i+1].den==0){
-      rmasses[i]=[ZERO,
-                  new BigFrac('-1','1'),
-                  TWO];
-
-    }
-    else if(mass[i].den==0 && mass[i+1].den==0){
-      rmasses[i]=[ONE,
-                  ZERO,
-                  ONE];
-
-    }
+    if(mass[i].den==0 && mass[i+1].den!=0){rmasses[i]=[TWO,ONE,ZERO];}
+    else if(mass[i].den!=0 && mass[i+1].den==0){rmasses[i]=[ZERO,new BigFrac('-1','1'),TWO];}
+    else if((mass[i].den==0 && mass[i+1].den==0)||(mass[i].num==0 && mass[i+1].num==0)){rmasses[i]=[ONE,ZERO,ONE];}
     else{
       rmasses[i]=[BigFrac.div(BigFrac.mul(TWO,mass[i]),BigFrac.add(mass[i],mass[i+1])),
                   BigFrac.div(BigFrac.sub(mass[i],mass[i+1]),BigFrac.add(mass[i],mass[i+1])),
@@ -182,13 +169,6 @@ function getKeyFrames(){
     if(vel[i+1].lt(vel[i])){
       let dt1=BigFrac.div(BigFrac.sub(BigFrac.sub(pos[i+1],pos[i]),pad[i]),BigFrac.sub(vel[i],vel[i+1]));
       colllist[i]=BigFrac.add(t,dt1);
-      if(colllist[i].lt(ZERO)){
-      console.log(vel[i+1]);
-      console.log(vel[i]);
-      console.log(vel[i+1].lt(vel[i]));
-      console.log(pos[i+1]);
-      console.log(pos[i]);
-      console.log(t);}
     }
     else{
       colllist[i]=false;
@@ -280,5 +260,5 @@ function draw(){
   }
 
   if(keyframe==frames.length-1 && t!=ZERO){ctx.fillStyle = '#30ff30';}
-  ctx.fillText("Collisions: "+((t==ZERO)?0:frames[keyframe][1]),8,30); 
+  ctx.fillText("Collisions: "+((t==ZERO)?0:frames[keyframe][1])+((showtotal && !(t==ZERO && settingschanged))?(" / "+(frames.length==0?0:frames[frames.length-1][1])):""),8,30); 
 }

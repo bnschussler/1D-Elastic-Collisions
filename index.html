@@ -20,7 +20,7 @@
          </div>
          <div class="row">
             <p style="margin-bottom: 0px;">Presets:</p>
-            <div class="row" style="height:100px">
+            <div class="row" style="height:100px;border-bottom: 1px solid #808080;">
                <div class="column">
                   <button style="height:80%;width:90%" id="Preset 1">Multiplication (6x7)</button>
                </div>
@@ -31,8 +31,7 @@
                   <button style="height:80%;width:90%" id="Preset 3">Stacked Super Bounce</button>
                </div>
             </div>
-            <hr style="width:100%">
-            <hr style="width:100%">
+            <p style="display: none;" id="loadingbox">Calculating...</p>
             <button onclick="if(this.textContent=='Run' && settingschanged){getKeyFrames()}
                              run=!run && t==ZERO;
                              t=ZERO;
@@ -41,28 +40,37 @@
                              document.getElementById('pausebutton').textContent='Pause';" id="runbutton" class="bluebutton">Run</button>
             <button onclick="run=(this.textContent=='Unpause');
                              this.textContent=(this.textContent=='Pause')?'Unpause':'Pause'" id="pausebutton" disabled>Pause</button>
+            <button onclick="showtotal=!showtotal;
+                             this.textContent=(showtotal)?'Hide Total Number of Collisions':'Show Total Number of Collisions'">Show Total Number of Collisions</button>
+            <div id="advanced" class="row pad" style="border-top: 1px solid #808080;">
+               <div class="dropdown column">
+                  <label for="showAdvanced" class="toggle">
+                  <p>Custom Initial Conditions / View Settings
+                  <input id="showAdvanced" type="checkbox"/></p>
+                  </label>
+                  <div class="options row">
+                     <p style="margin-bottom: 0px;margin-top: 20px;">Positions (<b>ascending order</b>, separated by spaces):</p>
+                     <input type="text" id="ptext" value="-20 -11 -5 -3 -1" class="break small" oninput="settingschanged=true"/>
+                     <p style="margin-bottom: 0px;margin-top: 10px;">Velocities (separated by spaces):</p>
+                     <input type="text" id="vtext" value="8 4 2 1 .5" class="break small" oninput="settingschanged=true"/>
+                     <p style="margin-bottom: 0px;margin-top: 10px;">Masses (separated by spaces):</p>
+                     <input type="text" id="mtext" value="1 1 1 1 1" class="break small" oninput="settingschanged=true"/>
 
-            <p style="margin-bottom: 0px;">Positions (<b>ascending order</b>, separated by spaces):</p>
-            <input type="text" id="ptext" value="-20 -11 -5 -3 -1" class="break small" oninput="settingschanged=true"/>
-            <p style="margin-bottom: 0px;">Velocities (separated by spaces):</p>
-            <input type="text" id="vtext" value="8 4 2 1 .5" class="break small" oninput="settingschanged=true"/>
-            <p style="margin-bottom: 0px;">Masses (separated by spaces):</p>
-            <input type="text" id="mtext" value="1 1 1 1 1" class="break small" oninput="settingschanged=true"/>
-
-            <div class="row">
-               <div class="column">
-                  <p> min x: 
-                  <input type="text" style="width: 8ch" value="-24" oninput="xmin=this.value">
-                  </p>
-               </div>
-               <div class="column">
-                  <p> max x:
-                  <input type="text" style="width: 8ch" value="24" oninput="xmax=this.value">
-                  </p>
+                     <div class="row">
+                        <div class="column">
+                           <p> min x: 
+                           <input type="text" style="width: 8ch" value="-24" oninput="xmin=this.value">
+                           </p>
+                        </div>
+                        <div class="column">
+                           <p> max x:
+                           <input type="text" style="width: 8ch" value="24" oninput="xmax=this.value">
+                           </p>
+                        </div>
+                     </div>
+                  </div>
                </div>
             </div>
-
-         </div>
          <!--<div id="advanced" class="row pad" style="border-top: 1px solid #808080;">
             <div class="dropdown row">
                <label for="showAdvanced" class="toggle" style="width:100%;margin-bottom: 10px;">
