@@ -34,19 +34,20 @@
             <hr style="width:100%">
             <hr style="width:100%">
             <button onclick="if(this.textContent=='Run' && settingschanged){getKeyFrames()}
-                             if(this.textContent=='Restart'){t=ZERO;}
-                             run=(this.textContent=='Run');this.textContent=(this.textContent=='Run')?'Restart':'Run';
-                             document.getElementById('pausebutton').disabled=(this.textContent=='Run');
-                              if(this.textContent=='Run')document.getElementById('pausebutton').textContent='Pause';" id="runbutton" class="bluebutton">Run</button>
+                             run=!run && t==ZERO;
+                             t=ZERO;
+                             this.textContent=run?'Restart':'Run';
+                             document.getElementById('pausebutton').disabled=(!run);
+                             document.getElementById('pausebutton').textContent='Pause';" id="runbutton" class="bluebutton">Run</button>
             <button onclick="run=(this.textContent=='Unpause');
                              this.textContent=(this.textContent=='Pause')?'Unpause':'Pause'" id="pausebutton" disabled>Pause</button>
 
             <p style="margin-bottom: 0px;">Positions (<b>ascending order</b>, separated by spaces):</p>
-            <input type="text" id="ptext" value="-1 3 5" class="break small" oninput="settingschanged=true"/>
+            <input type="text" id="ptext" value="-20 -11 -5 -3 -1" class="break small" oninput="settingschanged=true"/>
             <p style="margin-bottom: 0px;">Velocities (separated by spaces):</p>
-            <input type="text" id="vtext" value="1 1 -1" class="break small" oninput="settingschanged=true"/>
+            <input type="text" id="vtext" value="8 4 2 1 .5" class="break small" oninput="settingschanged=true"/>
             <p style="margin-bottom: 0px;">Masses (separated by spaces):</p>
-            <input type="text" id="mtext" value="1 1 1" class="break small" oninput="settingschanged=true"/>
+            <input type="text" id="mtext" value="1 1 1 1 1" class="break small" oninput="settingschanged=true"/>
 
             <div class="row">
                <div class="column">

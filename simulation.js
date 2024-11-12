@@ -279,5 +279,6 @@ function draw(){
     ctx.strokeRect(((fpos[i]-0.5-xmin)/(xmax-xmin))*width,height/2-bh/2*width/(xmax-xmin),width/(xmax-xmin),bh*width/(xmax-xmin))
   }
 
+  if(keyframe==frames.length-1 && t!=ZERO){ctx.fillStyle = '#30ff30';}
   ctx.fillText("Collisions: "+((t==ZERO)?0:frames[keyframe][1]),8,30); 
 }
