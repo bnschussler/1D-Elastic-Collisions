@@ -19,11 +19,13 @@ var colllist=[]
 var pad=[]
 var rmasses=[]
 var strkwdth=4;
-let keyframe;
+var keyframe;
 var frames=[];
+var collisioncount=0;
 var t;
 var run=false;
 var settingschanged=false;
+var calculating=false;
 var showtotal=false;
 
 var framerate=20;
@@ -118,15 +120,12 @@ function start(){
   ctx.font = "bold 30px serif"; 
   ctx.fillStyle = "#408020"; 
   ctx.textAlign = "left"; 
-  getKeyFrames();
+  t=ZERO;
+  settingschanged=true;
 }
 
 function getKeyFrames(){
   
-  settingschanged=false;
-
-  t=ZERO;
-
   fpos=numbers(document.getElementById("ptext").value);
   fvel=numbers(document.getElementById("vtext").value);
   fmass=numbers(document.getElementById("mtext").value);
@@ -136,6 +135,10 @@ function getKeyFrames(){
   vel=[];
   mass=[];
   for(let i=0;i<fpos.length;i++){
+    if(isNaN(fpos[i])||isNaN(fvel[i])||isNaN(fmass[i])){
+      alert("Something went wrong; check that your inputs are valid.");
+      return undefined;
+    }
     pos[i]=BigFrac.toBig(fpos[i]);
     vel[i]=BigFrac.toBig(fvel[i]);
     mass[i]=BigFrac.toBig(fmass[i]);
@@ -144,7 +147,12 @@ function getKeyFrames(){
     //bwrad[i]=BigFrac.toBig(fbwrad[i]);
   }
 
-  let collisioncount=0;
+  calculating=true;
+  settingschanged=false;
+
+  t=ZERO;
+  collisioncount=0;
+
   frames=[];
   frames[0]=[t,collisioncount,[...pos],[...vel]]
 
@@ -174,11 +182,11 @@ function getKeyFrames(){
       colllist[i]=false;
     }
   }
+}
 
-  let coll;
 
-  do{
-    coll=-1
+function resolveCollision(){
+  let coll=-1
     for(let i=0;i<colllist.length;i++){
       if(colllist[i] && (coll==-1 || colllist[i].lt(colllist[coll]))){
         coll=i;
@@ -219,20 +227,31 @@ function getKeyFrames(){
       else{
         frames[frames.length-1]=[t,collisioncount,[...pos],[...vel]];
       }
+
+      return true;
     }
-
-  }while(coll!=-1);
-
-  t=ZERO;
-
+    else{
+      calculating=false;
+      t=ZERO;
+      return false;
+    }
 }
-
 function draw(){
-  if(run){
+
+  if(calculating){
+    let ctime=Date.now();
+    while(resolveCollision() && (Date.now()-ctime)<30){}
+  }
+
+  if(!calculating){
+    document.getElementById('runbutton').textContent=(run || t!=ZERO)?'Restart':'Run';
+  }
+
+  if(run && !calculating){
     t=BigFrac.add(t,dt);
   }
 
-  if(t!=ZERO){
+  if(t!=ZERO && !calculating){
     for(keyframe=0;keyframe<(frames.length-1) && frames[keyframe+1][0].lt(t);keyframe++){}
     
     for(let i=0;i<fpos.length;i++){
@@ -260,5 +279,5 @@ function draw(){
   }
 
   if(keyframe==frames.length-1 && t!=ZERO){ctx.fillStyle = '#30ff30';}
-  ctx.fillText("Collisions: "+((t==ZERO)?0:frames[keyframe][1])+((showtotal && !(t==ZERO && settingschanged))?(" / "+(frames.length==0?0:frames[frames.length-1][1])):""),8,30); 
+  ctx.fillText("Collisions: "+((t==ZERO || calculating)?0:frames[keyframe][1])+(showtotal?((!((t==ZERO || calculating) && settingschanged))?(" / "+(frames.length==0?0:frames[frames.length-1][1])):" / ?"):""),8,30); 
 }

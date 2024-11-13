@@ -31,11 +31,10 @@
                   <button style="height:80%;width:90%;margin: 0 auto;" id="Preset 3">Stacked Super Bounce</button>
                </div>
             </div>
-            <p style="display: none;" id="loadingbox">Calculating...</p>
-            <button onclick="if(this.textContent=='Run' && settingschanged){getKeyFrames()}
+            <button onclick="if(calculating){calculating=false;settingschanged=true;}
+                             if(this.textContent=='Run' && settingschanged){this.textContent='Calculating... (press again to stop)';getKeyFrames()}
                              run=!run && t==ZERO;
                              t=ZERO;
-                             this.textContent=run?'Restart':'Run';
                              document.getElementById('pausebutton').disabled=(!run);
                              document.getElementById('pausebutton').textContent='Pause';" id="runbutton" class="bluebutton">Run</button>
             <button onclick="run=(this.textContent=='Unpause');
