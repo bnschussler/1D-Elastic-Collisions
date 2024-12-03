@@ -39,6 +39,12 @@ function gcd(a,b){ //https://stackoverflow.com/questions/17445231/js-how-to-find
     a0%=b0;
     if(a0==0) return b0;
     b0%=a0;
+    if(isNaN(a0)){
+      alert("Something went wrong! Most likely a box managed to accumulate an infinite velocity.");
+      calculating=false;
+      t=ZERO;
+      return 0;
+    }
   }
 }
 
@@ -279,5 +285,5 @@ function draw(){
   }
 
   if(keyframe==frames.length-1 && t!=ZERO){ctx.fillStyle = '#30ff30';}
-  ctx.fillText("Collisions: "+((t==ZERO || calculating)?0:frames[keyframe][1])+(showtotal?((!((t==ZERO || calculating) && settingschanged))?(" / "+(frames.length==0?0:frames[frames.length-1][1])):" / ?"):""),8,30); 
+  ctx.fillText("Collisions: "+((t==ZERO || calculating)?0:frames[keyframe][1])+(showtotal?((t==ZERO && settingschanged)?" / ?":(" / "+(frames.length==0?0:frames[frames.length-1][1]))):""),8,30); 
 }
